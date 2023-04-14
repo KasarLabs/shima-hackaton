@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
+import { testConfig } from './dbTestConfig';
 
-const pool = new Pool({
+const pool = process.env.NODE_ENV == 'test' ? testConfig : new Pool({
   user: 'your_database_user',
   host: 'your_database_host',
   database: 'your_database_name',

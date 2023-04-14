@@ -1,0 +1,17 @@
+- app/
+  - controllers/
+    - providerController.ts
+    - userController.ts
+  - models/
+    - provider.ts
+    - user.ts
+  - routes/
+    - providerRoutes.ts
+    - userRoutes.ts
+  - utils/
+    - rpcUtils.ts
+    - authentication.ts
+  - config/
+    - dbConfig.ts
+  - app.ts
+- package.tson

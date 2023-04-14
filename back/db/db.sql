@@ -30,6 +30,64 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: dapp; Type: TABLE; Schema: public; Owner: clement
+--
+
+CREATE TABLE public.dapp (
+    id integer NOT NULL,
+    network character varying(255) NOT NULL,
+    nom character varying(255) NOT NULL,
+    user_id bigint NOT NULL,
+    url character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.dapp OWNER TO clement;
+
+--
+-- Name: dapp_id_seq; Type: SEQUENCE; Schema: public; Owner: clement
+--
+
+CREATE SEQUENCE public.dapp_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dapp_id_seq OWNER TO clement;
+
+--
+-- Name: dapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: clement
+--
+
+ALTER SEQUENCE public.dapp_id_seq OWNED BY public.dapp.id;
+
+
+--
+-- Name: dapp_user_id_seq; Type: SEQUENCE; Schema: public; Owner: clement
+--
+
+CREATE SEQUENCE public.dapp_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dapp_user_id_seq OWNER TO clement;
+
+--
+-- Name: dapp_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: clement
+--
+
+ALTER SEQUENCE public.dapp_user_id_seq OWNED BY public.dapp.user_id;
+
+
+--
 -- Name: providers; Type: TABLE; Schema: schema_owner; Owner: clement
 --
 
@@ -69,19 +127,19 @@ ALTER SEQUENCE schema_owner.providers_provider_id_seq OWNED BY schema_owner.prov
 --
 
 CREATE TABLE schema_owner.users (
-    user_id integer NOT NULL,
+    id integer NOT NULL,
     wallet_address character varying(255) NOT NULL,
-    registration_date date NOT NULL
+    key character varying(255) NOT NULL
 );
 
 
 ALTER TABLE schema_owner.users OWNER TO clement;
 
 --
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: schema_owner; Owner: clement
+-- Name: users_id_seq; Type: SEQUENCE; Schema: schema_owner; Owner: clement
 --
 
-CREATE SEQUENCE schema_owner.users_user_id_seq
+CREATE SEQUENCE schema_owner.users_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -90,13 +148,27 @@ CREATE SEQUENCE schema_owner.users_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE schema_owner.users_user_id_seq OWNER TO clement;
+ALTER TABLE schema_owner.users_id_seq OWNER TO clement;
 
 --
--- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: schema_owner; Owner: clement
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: schema_owner; Owner: clement
 --
 
-ALTER SEQUENCE schema_owner.users_user_id_seq OWNED BY schema_owner.users.user_id;
+ALTER SEQUENCE schema_owner.users_id_seq OWNED BY schema_owner.users.id;
+
+
+--
+-- Name: dapp id; Type: DEFAULT; Schema: public; Owner: clement
+--
+
+ALTER TABLE ONLY public.dapp ALTER COLUMN id SET DEFAULT nextval('public.dapp_id_seq'::regclass);
+
+
+--
+-- Name: dapp user_id; Type: DEFAULT; Schema: public; Owner: clement
+--
+
+ALTER TABLE ONLY public.dapp ALTER COLUMN user_id SET DEFAULT nextval('public.dapp_user_id_seq'::regclass);
 
 
 --
@@ -107,10 +179,18 @@ ALTER TABLE ONLY schema_owner.providers ALTER COLUMN provider_id SET DEFAULT nex
 
 
 --
--- Name: users user_id; Type: DEFAULT; Schema: schema_owner; Owner: clement
+-- Name: users id; Type: DEFAULT; Schema: schema_owner; Owner: clement
 --
 
-ALTER TABLE ONLY schema_owner.users ALTER COLUMN user_id SET DEFAULT nextval('schema_owner.users_user_id_seq'::regclass);
+ALTER TABLE ONLY schema_owner.users ALTER COLUMN id SET DEFAULT nextval('schema_owner.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: dapp; Type: TABLE DATA; Schema: public; Owner: clement
+--
+
+COPY public.dapp (id, network, nom, user_id, url) FROM stdin;
+\.
 
 
 --
@@ -125,8 +205,22 @@ COPY schema_owner.providers (provider_id, rpc_url, performance_score) FROM stdin
 -- Data for Name: users; Type: TABLE DATA; Schema: schema_owner; Owner: clement
 --
 
-COPY schema_owner.users (user_id, wallet_address, registration_date) FROM stdin;
+COPY schema_owner.users (id, wallet_address, key) FROM stdin;
 \.
+
+
+--
+-- Name: dapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: clement
+--
+
+SELECT pg_catalog.setval('public.dapp_id_seq', 1, false);
+
+
+--
+-- Name: dapp_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: clement
+--
+
+SELECT pg_catalog.setval('public.dapp_user_id_seq', 1, false);
 
 
 --
@@ -137,10 +231,18 @@ SELECT pg_catalog.setval('schema_owner.providers_provider_id_seq', 1, false);
 
 
 --
--- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: schema_owner; Owner: clement
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: schema_owner; Owner: clement
 --
 
-SELECT pg_catalog.setval('schema_owner.users_user_id_seq', 1, false);
+SELECT pg_catalog.setval('schema_owner.users_id_seq', 1, false);
+
+
+--
+-- Name: dapp dapp_pkey; Type: CONSTRAINT; Schema: public; Owner: clement
+--
+
+ALTER TABLE ONLY public.dapp
+    ADD CONSTRAINT dapp_pkey PRIMARY KEY (id);
 
 
 --
@@ -156,7 +258,7 @@ ALTER TABLE ONLY schema_owner.providers
 --
 
 ALTER TABLE ONLY schema_owner.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --

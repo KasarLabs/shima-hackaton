@@ -43,8 +43,9 @@ export const createUser = (user: User): Promise<User> => {
             (error, results) => {
                 if (error) {
                     reject(error);
+                } else {
+                    resolve(results.rows[0]);
                 }
-                resolve(results.rows[0]);
             }
         );
     });
@@ -63,8 +64,9 @@ export const updateUser = (id: number, user: User): Promise<User> => {
                 }
                 if (results.rows.length === 0) {
                     throw new Error(`User with ID ${id} not found`);
+                } else {
+                    resolve(results.rows[0]);
                 }
-                resolve(results.rows[0]);
             }
         );
     });

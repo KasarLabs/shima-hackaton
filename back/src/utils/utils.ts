@@ -26,7 +26,7 @@ export const getNextProvider = (providers: Provider[]): Provider | null => {
       while (true) {
         currentIndex = (currentIndex + 1) % n;
         if (currentIndex === 0) {
-          currentWeight = currentWeight - 1;
+          currentWeight = currentWeight - 5;
           if (currentWeight < 0) {
             currentWeight = Math.max(...providers.map((provider) => provider.performance_score));
           }

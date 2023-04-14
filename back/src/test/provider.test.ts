@@ -1,9 +1,7 @@
-// test/providerRoutes.test.ts
-
 import chai from 'chai';
 import supertest from 'supertest';
 import { describe, it } from 'mocha';
-import app from '../index'; // Import your app instance
+import app from '../index';
 
 const { expect } = chai;
 

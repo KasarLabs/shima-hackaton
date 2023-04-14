@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS schema_owner.users (
 -- Insert some sample providers
 INSERT INTO schema_owner.providers (rpc_url, performance_score, computation_units)
 VALUES
-    ('https://eth.llamarpc.com', 10, 0),
-    ('https://rpc.flashbots.net', 20, 0),
-    ('https://cloudflare-eth.com', 15, 0);
+    ('https://eth.llamarpc.com', 100, 0),
+    ('https://rpc.flashbots.net', 200, 0),
+    ('https://cloudflare-eth.com', 150, 0);
 
 -- Insert some sample users
 INSERT INTO schema_owner.users (wallet_address, key, computation_units)

@@ -1,15 +1,10 @@
 import { expect } from 'chai';
 import supertest from 'supertest';
 import app from '../index';
-import { getUserById } from '../models/user.model';
 
 const request = supertest(app);
 
 describe('RPC Forwarding', () => {
-    // Remove the test user after running the tests
-    after(async () => {
-    });
-  
     it('should forward RPC request with a valid user key', async () => {
         const newUser = {
             wallet_address: 'test_wallet_address',

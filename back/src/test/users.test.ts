@@ -4,7 +4,6 @@ import chai from 'chai';
 import supertest from 'supertest';
 import { describe, it } from 'mocha';
 import app from '../index'; // Import your app instance
-import { getAllUsers } from '../models/user.model';
 
 const { expect } = chai;
 

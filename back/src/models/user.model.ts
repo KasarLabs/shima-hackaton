@@ -4,6 +4,7 @@ export interface User {
     id: number;
     wallet_address: string;
     key: string;
+    computation_units: number;
 }
 
 // Function to retrieve all users
@@ -50,11 +51,11 @@ export const getUserByKey = (key: string): Promise<User | null> => {
 
 // Function to create a user
 export const createUser = (user: User): Promise<User> => {
-    const { wallet_address, key } = user;
+    const { wallet_address, key, computation_units } = user;
     return new Promise((resolve, reject) => {
         query(
-            'INSERT INTO schema_owner.users (wallet_address, key) VALUES ($1, $2) RETURNING *',
-            [wallet_address, key],
+            'INSERT INTO schema_owner.users (wallet_address, key, computation_units) VALUES ($1, $2, $3) RETURNING *',
+            [wallet_address, key, computation_units],
             (error, results) => {
                 if (error) {
                     reject(error);
@@ -68,11 +69,11 @@ export const createUser = (user: User): Promise<User> => {
 
 // Function to update a user
 export const updateUser = (id: number, user: User): Promise<User> => {
-    const { wallet_address, key } = user;
+    const { wallet_address, key, computation_units } = user;
     return new Promise((resolve, reject) => {
         query(
-            'UPDATE schema_owner.users SET wallet_address = $1, key = $2 WHERE id = $3 RETURNING *',
-            [wallet_address, key, id],
+            'UPDATE schema_owner.users SET wallet_address = $1, key = $2, computation_units = $3 WHERE id = $4 RETURNING *',
+            [wallet_address, key, computation_units, id],
             (error, results) => {
                 if (error) {
                     reject(error);

@@ -1,14 +1,13 @@
 import { expect } from 'chai';
-import { time } from 'console';
 import { Provider } from '../models/provider.model';
 import { getNextProvider, rankRPCs } from '../utils/utils';
 
 
 // Example provider data
 let providers: Provider[] = [
-    { id: 1, rpc_url: 'https://eth.llamarpc.com', performance_score: 10 },
-    { id: 2, rpc_url: 'https://rpc.flashbots.net', performance_score: 4 },
-    { id: 3, rpc_url: 'https://cloudflare-eth.com', performance_score: 1 },
+    { id: 1, rpc_url: 'https://eth.llamarpc.com', performance_score: 10, computation_units: 0 },
+    { id: 2, rpc_url: 'https://rpc.flashbots.net', performance_score: 4, computation_units: 0 },
+    { id: 3, rpc_url: 'https://cloudflare-eth.com', performance_score: 1, computation_units: 0 },
 ];
 
 describe('RPCs Ranking', () => {

@@ -8,7 +8,7 @@ import {
   updateProvider,
   deleteProvider,
 } from '../models/provider.model';
-import { getUserByKey } from '../models/user.model';
+import { getUserByKey, updateUser } from '../models/user.model';
 import { getNextProvider, rankRPCs } from '../utils/utils';
 
 // Get all providers
@@ -113,6 +113,12 @@ export const rpcRequest = async (req: Request, res: Response) => {
     if (!provider) {
       return res.status(500).json({ error: 'No provider available' });
     }
+
+    // update rpc and user computation units
+    provider.computation_units += 1;
+    await updateProvider(provider.id, provider);
+    user.computation_units += 1;
+    await updateUser(user.id, user);
 
     // Forward the RPC request to the selected provider
     const response = await axios.post(provider.rpc_url, req.body);

@@ -48,7 +48,8 @@ describe('Provider routes', function () {
     it('should POST a new provider then DELETE it', async () => {
         const newProvider = {
           rpc_url: 'https://testprovider.testing.com',
-          performance_score: 5
+          performance_score: 5,
+          computation_units: 0,
         };
       
         let res = await supertest(app).post('/providers').send(newProvider);

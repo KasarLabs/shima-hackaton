@@ -4,6 +4,7 @@ import chai from 'chai';
 import supertest from 'supertest';
 import { describe, it } from 'mocha';
 import app from '../index'; // Import your app instance
+import { getAllUsers } from '../models/user.model';
 
 const { expect } = chai;
 
@@ -27,7 +28,8 @@ describe('user routes', function () {
     it('should POST a new user then DELETE it', async () => {
         const newUser = {
           wallet_address: '0x1234abcd',
-          key: "my_key"
+          key: "my_key",
+          computation_units: 0,
         };
       
         let res = await supertest(app).post('/users').send(newUser);

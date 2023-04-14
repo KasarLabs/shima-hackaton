@@ -4,6 +4,7 @@ export interface Provider {
     id: number;
     rpc_url: string;
     performance_score: number;
+    computation_units: number;
 }
 
 // Function to get all providers
@@ -36,11 +37,11 @@ export const getProviderById = (id: number): Promise<Provider> => {
 
 // Function to create a new provider
 export const createProvider = (data: Provider): Promise<Provider> => {
-    const { rpc_url, performance_score } = data;
+    const { rpc_url, performance_score, computation_units } = data;
     return new Promise((resolve, reject) => {
         query(
-            'INSERT INTO schema_owner.providers (rpc_url, performance_score) VALUES ($1, $2) RETURNING *',
-            [rpc_url, performance_score],
+            'INSERT INTO schema_owner.providers (rpc_url, performance_score, computation_units) VALUES ($1, $2, $3) RETURNING *',
+            [rpc_url, performance_score, computation_units],
             (err, result) => {
                 if (err) {
                     reject(err);
@@ -54,11 +55,11 @@ export const createProvider = (data: Provider): Promise<Provider> => {
 
 // Function to update a provider
 export const updateProvider = (id: number, data: Provider): Promise<Provider> => {
-    const { rpc_url, performance_score } = data;
+    const { rpc_url, performance_score, computation_units } = data;
     return new Promise((resolve, reject) => {
         query(
-            'UPDATE schema_owner.providers SET rpc_url = $1, performance_score = $2 WHERE id = $3 RETURNING *',
-            [rpc_url, performance_score, id],
+            'UPDATE schema_owner.providers SET rpc_url = $1, performance_score = $2, computation_units = $3 WHERE id = $4 RETURNING *',
+            [rpc_url, performance_score, computation_units, id],
             (err, result) => {
                 if (err) {
                     reject(err);

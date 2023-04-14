@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import axios from 'axios';
 import {
   Provider,
   getAllProviders,
@@ -7,6 +8,7 @@ import {
   updateProvider,
   deleteProvider,
 } from '../models/provider.model';
+import { getUserByKey } from '../models/user.model';
 import { getNextProvider, rankRPCs } from '../utils/utils';
 
 // Get all providers
@@ -92,3 +94,33 @@ export const rankProvidersController = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred while ranking providers.' });
   }
 };
+
+export const rpcRequest = async (req: Request, res: Response) => {
+  try {
+    // Check if the user key exists in the database
+    const userKey = req.params.key;
+    const user = await getUserByKey(userKey);
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid user key' });
+    }
+
+    // Get the list of providers from the database or cache
+    const providers = await getAllProviders();
+
+    // Get the next provider using the weighted round-robin algorithm
+    const provider = getNextProvider(providers);
+
+    if (!provider) {
+      return res.status(500).json({ error: 'No provider available' });
+    }
+
+    // Forward the RPC request to the selected provider
+    const response = await axios.post(provider.rpc_url, req.body);
+
+    // Return the RPC response back to the user
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while processing the RPC request.' });
+  }
+}

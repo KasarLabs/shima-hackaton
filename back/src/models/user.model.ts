@@ -33,6 +33,21 @@ export const getUserById = (id: number): Promise<User> => {
     });
 };
 
+export const getUserByKey = (key: string): Promise<User | null> => {
+    return new Promise((resolve, reject) => {
+      query('SELECT * FROM schema_owner.users WHERE key = $1', [key], (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results.rows.length === 0) {
+          resolve(null);
+        } else {
+          resolve(results.rows[0]);
+        }
+      });
+    });
+  };
+
 // Function to create a user
 export const createUser = (user: User): Promise<User> => {
     const { wallet_address, key } = user;

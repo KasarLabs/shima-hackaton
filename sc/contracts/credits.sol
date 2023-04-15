@@ -41,14 +41,13 @@ contract CreditContract is Ownable {
         emit StableDistribution(owner(), recipients, amounts);
     }
 
-    function withdraw(address payable user, uint256 amount) public onlyOwner {
-        require(amount <= credits[user], "Insufficient credits to withdraw");
-
-        uint256 stableAmount = amount / COEFFICIENT;
-        credits[user] -= amount;
-        totalCredits -= amount;  
-        require(stable.transfer(user, stableAmount), "Withdrawal failed");
-        emit Withdrawal(user, amount);
+    function withdraw(address payable user, uint256 amount) public onlyOwner { // amount need to be in USDC
+        uint256 creditsAmount = amount * COEFFICIENT;
+        require(creditsAmount <= credits[user], "Insufficient credits to withdraw");
+        credits[user] -= creditsAmount;
+        totalCredits -= creditsAmount;  
+        require(stable.transfer(user, amount), "Withdrawal failed");
+        emit Withdrawal(user, creditsAmount);
     }
 
     function withdrawCredits(address[] memory users, uint256[] memory amounts) public onlyOwner {

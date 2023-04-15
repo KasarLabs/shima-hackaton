@@ -77,7 +77,7 @@ describe("CreditContract", function () {
         const beforeCredits = await contractInstance.credits(user1.address);
         // Withdraw stable coins
         const balanceBefore = await stable.balanceOf(user1.address);
-        await expect(contractInstance.connect(owner).withdraw(user1.address, withdrawalAmount.mul(COEFFICIENT))).to.emit(contractInstance, "Withdrawal").withArgs(user1.address, withdrawalAmount.mul(COEFFICIENT));
+        await expect(contractInstance.connect(owner).withdraw(user1.address, withdrawalAmount)).to.emit(contractInstance, "Withdrawal").withArgs(user1.address, withdrawalAmount.mul(COEFFICIENT));
         const balanceAfter = await stable.balanceOf(user1.address);
         const afterCredits = await contractInstance.credits(user1.address);
         const expectedBalance = balanceBefore.add(withdrawalAmount);

@@ -34,6 +34,20 @@ export const getUserById = (id: number): Promise<User> => {
     });
 };
 
+export const getUserByWalletAddress = (wallet_address: string): Promise<User> => {
+    return new Promise((resolve, reject) => {
+        query('SELECT * FROM schema_owner.users WHERE wallet_address = $1', [wallet_address], (error, results) => {
+            if (error) {
+                reject(error);
+            }
+            if (results.rows.length === 0) {
+                throw new Error(`User with wallet_address ${wallet_address} not found`);
+            }
+            resolve(results.rows[0]);
+        });
+    });
+};
+
 export const getUserByKey = (key: string): Promise<User | null> => {
     return new Promise((resolve, reject) => {
       query('SELECT * FROM schema_owner.users WHERE key = $1', [key], (error, results) => {

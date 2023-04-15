@@ -1,5 +1,4 @@
 import * as React from "react";
-import Dashboard from "./dashboard";
 import Link from "next/link";
 
 export default function Sidebar() {

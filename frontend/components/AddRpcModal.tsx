@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { networks, Network } from "../utils/utils";
 import axios from "axios";
-import type { Provider } from "../interfaces/";
+import type { Provider } from "../interfaces";
 import { generateRandomKey } from "../utils/utils";
 
 interface AddRpcModalProps {

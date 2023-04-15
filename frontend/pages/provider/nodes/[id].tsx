@@ -26,14 +26,6 @@ const NodeDashboard = ({ node, nodes }: NodeDashboardProps) => {
     setIsModalOpen(false);
   };
 
-  //   const nodes: Node[] = [
-  //     { id: 1, network: "Ethereum" },
-  //     { id: 2, network: "Polygon" },
-  //     { id: 3, network: "Taiko" },
-
-  //     // Add more nodes here or fetch them from an API
-  //   ];
-
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
@@ -57,14 +49,7 @@ const NodeDashboard = ({ node, nodes }: NodeDashboardProps) => {
         </Link>
       </button>
       <div className="flex flex-row align-middle">
-        <h1 className="text-3xl font-heading">Node ID: {node.id} -</h1>
-        <img
-          src={`/chains/${node.network.toLowerCase()}.png`}
-          alt={`${
-            node.network.charAt(0).toUpperCase() + node.network.slice(1)
-          } logo`}
-          className="w-8 h-8 ml-2" // Adjust the width and height as needed
-        />
+        <h1 className="text-3xl font-heading">Node ID: {node.id} </h1>
       </div>
       <div className="divide-x grid grid-cols-3 gap-4 mb-4 p-4 ml-4 border items-center mt-4 rounded-lg">
         <div className="p-4 flex flex-row items-center justify-center">
@@ -113,6 +98,7 @@ const findNodeById = (id: number): Node | undefined => {
     { id: 1, network: "Polygon" },
     { id: 2, network: "Taiko" },
     { id: 3, network: "Celo" },
+    { id: 4, network: "Gnosis" },
   ];
 
   return exampleNodes.find((node) => node.id === id);
@@ -135,6 +121,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     { id: 1, network: "Polygon" },
     { id: 2, network: "Taiko" },
     { id: 3, network: "Celo" },
+    { id: 4, network: "Gnosis" },
+
     // Add more nodes here or fetch them from an API
   ];
 

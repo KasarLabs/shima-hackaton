@@ -1,17 +1,16 @@
 // NodeItem.tsx
 import React from "react";
 import Link from "next/link";
+import { Provider } from "../interfaces";
 interface NodeItemProps {
-  id: number;
-  network: string;
+  node: Provider;
   isShaking: boolean;
   isMinusVisible: boolean;
   onNodeItemClick: () => void;
 }
 
 const NodeItem: React.FC<NodeItemProps> = ({
-  id,
-  network,
+  node,
   isShaking,
   isMinusVisible,
   onNodeItemClick,
@@ -31,9 +30,14 @@ const NodeItem: React.FC<NodeItemProps> = ({
           </svg>
         </div>
       )}
-      <Link href={`/provider/nodes/${id}`}>
-        <p className="font-semibold">Node {id}</p>
-        <p> {network}</p>
+      <Link href={`/provider/nodes/${node.id}`}>
+        <div>
+          <div className="flex flex-col">
+            <p className="font-semibold">Node: {node.id}</p>
+            <p>ChainId: {node.chain_id}</p>
+            <p className="">RPC: {node.rpc_url}</p>
+          </div>
+        </div>
       </Link>
     </div>
   );

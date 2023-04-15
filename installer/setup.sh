@@ -62,18 +62,18 @@ print_menu() {
 }
 
 getClient() {
-    if sudo docker ps -a | grep geth > /dev/null
+    if sudo docker ps -a | grep celo > /dev/null
 	then
-		node_docker="geth"
+		node_docker="celo"
     elif sudo docker ps -a | grep taiko > /dev/null
 	then
 		node_docker="taiko"
     elif sudo docker ps -a | grep client_dtl_1 > /dev/null
 	then
 		node_docker="client_dtl_1"
-    elif sudo docker ps -a | grep celo > /dev/null
+    elif sudo docker ps -a | grep geth > /dev/null
 	then
-		node_docker="celo"
+		node_docker="geth"
     elif sudo docker ps -a | grep execution > /dev/null
 	then
 		node_docker="execution"
@@ -219,7 +219,7 @@ installTaiko() {
     cp .env.sample .env
     sed -i 's/L1_ENDPOINT_HTTP=.*/L1_ENDPOINT_HTTP=https:\/\/l1rpc.a2.taiko.xyz/g' .env
     sed -i 's/L1_ENDPOINT_WS=.*/L1_ENDPOINT_WS=wss:\/\/l1ws.a2.taiko.xyz/g' .env
-    sed -i 's/\(- --ws.origins.*\)/\0\n  - --p2p.syncTimeout\n  - "600"/' docker-compose.yml
+    # sed -i 's/\(- --ws.origins.*\)/\0\n      - --p2p.syncTimeout=6000/' docker-compose.yml
     clear
     echo -e "\n\033[34mStarting Taiko node... \033[m"
     sleep 1

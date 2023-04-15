@@ -4,7 +4,11 @@ import AddRpcModal from "./AddRpcModal";
 import DeleteRpcModal from "./DeleteRpcModal";
 import type { Node } from "../interfaces/";
 
-const ProviderDashboard = () => {
+interface ProviderDashboardProps {
+  nodes: Node[];
+}
+
+const ProviderDashboard = ({ nodes }: ProviderDashboardProps) => {
   const [isShaking, setIsShaking] = useState(false);
   const [isMinusVisible, setIsMinusVisible] = useState(false);
 
@@ -12,12 +16,6 @@ const ProviderDashboard = () => {
     setIsShaking(!isShaking);
     setIsMinusVisible(!isMinusVisible);
   };
-
-  const nodes: Node[] = [
-    { id: 1, network: "Ethereum Mainnet" },
-    { id: 2, network: "Ethereum Mainnet" },
-    // Add more nodes here or fetch them from an API
-  ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,7 +46,7 @@ const ProviderDashboard = () => {
   return (
     <div className="ml-64">
       <div className="">
-        <h1 className="p-4 font-heading text-6xl text-center">
+        <h1 className="p-4 mb-12 font-heading text-6xl text-center">
           Providers provide
         </h1>
 

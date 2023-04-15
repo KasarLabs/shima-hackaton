@@ -1,6 +1,6 @@
 // NodeItem.tsx
 import React from "react";
-
+import Link from "next/link";
 interface NodeItemProps {
   id: number;
   network: string;
@@ -18,7 +18,7 @@ const NodeItem: React.FC<NodeItemProps> = ({
 }) => {
   return (
     <div
-      className={`border p-4 rounded-lg relative ${
+      className={`border p-4 rounded-lg relative transform transition-transform duration-300 hover:scale-110 hover:z-50 bg-black ${
         isShaking ? "animate-shake hover:cursor-pointer" : ""
       }`}
       onClick={isShaking ? onNodeItemClick : undefined}
@@ -31,8 +31,10 @@ const NodeItem: React.FC<NodeItemProps> = ({
           </svg>
         </div>
       )}
-      <p className="font-semibold">Node {id}</p>
-      <p>Network: {network}</p>
+      <Link href={`/provider/nodes/${id}`}>
+        <p className="font-semibold">Node {id}</p>
+        <p> {network}</p>
+      </Link>
     </div>
   );
 };

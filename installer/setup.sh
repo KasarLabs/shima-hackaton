@@ -62,15 +62,27 @@ print_menu() {
 }
 
 getClient() {
-    if sudo docker ps -a | grep geth > /dev/null
+    if sudo docker ps -a | grep celo > /dev/null
 	then
-		node_docker="geth"
+		node_docker="celo"
     elif sudo docker ps -a | grep taiko > /dev/null
 	then
 		node_docker="taiko"
-    elif sudo docker ps -a | grep celo > /dev/null
+    elif sudo docker ps -a | grep client_dtl_1 > /dev/null
 	then
-		node_docker="celo"
+		node_docker="client_dtl_1"
+    elif sudo docker ps -a | grep geth > /dev/null
+	then
+		node_docker="geth"
+    elif sudo docker ps -a | grep execution > /dev/null
+	then
+		node_docker="execution"
+    elif sudo docker ps -a | grep scroll > /dev/null
+	then
+		node_docker="scroll"
+    elif sudo docker ps -a | grep mantle > /dev/null
+	then
+		node_docker="mantle"
 	else
 		node_docker="null"
 	fi
@@ -106,7 +118,7 @@ menu_installer() {
 
 menu_running() {
     clear
-    options=("Ethereum" "Taiko" "Celo" "Quit")
+    options=("Ethereum" "Taiko" "Celo" "Gnosis" "Scroll" "Mantle" "Quit")
     choice=("Yes" "No" "Quit")
     selected=0 # Initialize the selected variable
     print_menu "Welcome to node installer!" "Please select the blockchain that you would like to setup" "${options[@]}"
@@ -119,6 +131,15 @@ menu_running() {
     elif [ "${options[$selected]}" = "Celo" ]; then
         installTools
         installCelo
+    elif [ "${options[$selected]}" = "Gnosis" ]; then
+        installTools
+        installGnosis
+    elif [ "${options[$selected]}" = "Scroll" ]; then
+        installTools
+        installScroll
+    elif [ "${options[$selected]}" = "Mantle" ]; then
+        installTools
+        installMantle
     fi
 }
 
@@ -182,6 +203,11 @@ installGeth() {
     echo "{\"name\": \"${node_name}\", \"client\": \"${client}\", \"rpc_key\": \"${rpc_key}\"}" > config.json
     go build
     echo -e "\n\033[32m$name full node is running correctly using Geth client!\033[m"
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mTaiko full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
     exit
 }
 
@@ -198,7 +224,7 @@ installTaiko() {
     cp .env.sample .env
     sed -i 's/L1_ENDPOINT_HTTP=.*/L1_ENDPOINT_HTTP=https:\/\/l1rpc.a2.taiko.xyz/g' .env
     sed -i 's/L1_ENDPOINT_WS=.*/L1_ENDPOINT_WS=wss:\/\/l1ws.a2.taiko.xyz/g' .env
-    sed -i 's/\(- --ws.origins.*\)/\0\n  - --p2p.syncTimeout\n  - "600"/' docker-compose.yml
+    # sed -i 's/\(- --ws.origins.*\)/\0\n      - --p2p.syncTimeout=6000/' docker-compose.yml
     clear
     echo -e "\n\033[34mStarting Taiko node... \033[m"
     sleep 1
@@ -235,7 +261,7 @@ installCelo() {
 
     echo "Celo account address: $CELO_ACCOUNT_ADDRESS"
     # Start the Celo full node
-    sudo docker run --name celo -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode full --http --http.addr 0.0.0.0 --http.api eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --etherbase $CELO_ACCOUNT_ADDRESS --datadir /root/.celo
+    sudo docker run --name celo -d --restart unless-stopped --stop-timeout 300 -p 0.0.0.0:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode full --http --http.addr 0.0.0.0 --http.api eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --etherbase $CELO_ACCOUNT_ADDRESS --datadir /root/.celo
 
     clear
     echo -e "\n\033[34mWaiting for Celo full node to start... \033[m"
@@ -249,7 +275,151 @@ installCelo() {
     exit
 }
 
+installGnosis() {
+  # Create required directories
+  mkdir -p /home/$USER/gnosis/execution
+  mkdir /home/$USER/gnosis/jwtsecret
 
+  # Generate JWT secret
+  openssl rand -hex 32 | tr -d "\n" > "/home/$USER/gnosis/jwtsecret/jwt.hex"
+
+  # Create data directory for consensus
+  mkdir -p /home/$USER/gnosis/consensus/data
+
+  # Create docker-compose.yml file
+  cat > /home/$USER/gnosis/docker-compose.yml << 'EOL'
+version: "3"
+services:
+
+  execution:
+    container_name: execution
+    image: nethermind/nethermind:latest
+    restart: always
+    stop_grace_period: 1m
+    networks:
+      - gnosis_net
+    ports:
+      - 30303:30303/tcp # p2p
+      - 30303:30303/udp # p2p
+    expose:
+      - 8545 # rpc
+      - 8551 # engine api
+    volumes:
+      - /home/$USER/gnosis/execution:/data
+      - /home/$USER/gnosis/jwtsecret/jwt.hex:/jwt.hex
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: |
+      --config=gnosis
+      --datadir=/data
+      --log=INFO
+      --Sync.SnapSync=false
+      --JsonRpc.Enabled=true
+      --JsonRpc.Host=0.0.0.0
+      --JsonRpc.Port=8545
+      --JsonRpc.EnabledModules=[Web3,Eth,Subscribe,Net,]
+      --JsonRpc.JwtSecretFile=/jwt.hex
+      --JsonRpc.EngineHost=0.0.0.0
+      --JsonRpc.EnginePort=8551
+      --Network.DiscoveryPort=30303
+      --HealthChecks.Enabled=false
+      --Pruning.CacheMb=2048
+    logging:
+      driver: "local"
+
+  consensus:
+    container_name: consensus
+    image: sigp/lighthouse:latest-modern
+    restart: always
+    networks:
+      - gnosis_net
+    ports:
+      - 9000:9000/tcp # p2p
+      - 9000:9000/udp # p2p
+      - 5054:5054/tcp # metrics
+    expose:
+      - 4000 # http
+    volumes:
+      - /home/$USER/gnosis/consensus/data:/data
+      - /home/$USER/gnosis/jwtsecret/jwt.hex:/jwt.hex
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: |
+      lighthouse
+      beacon_node
+      --network=gnosis
+      --disable-upnp
+      --datadir=/data
+      --port=9000
+      --http
+      --http-address=0.0.0.0
+      --http-port=4000
+      --target-peers=50
+      --execution-endpoint=http://execution:8551
+      --execution-jwt=/jwt.hex
+      --debug-level=info
+      --validator-monitor-auto
+      --subscribe-all-subnets
+      --import-all-attestations
+      --metrics
+      --metrics-port=5054
+      --metrics-address=0.0.0.0
+      --checkpoint-sync-url=https://checkpoint.gnosischain.com/
+    logging:
+      driver: "local"
+
+networks:
+  gnosis_net:
+    name: gnosis_net
+EOL
+
+  # Change to the gnosis directory and start the docker-compose
+  cd /home/$USER/gnosis
+  docker-compose up -d
+  echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+  sudo ufw enable
+  sudo ufw allow 8545
+  PUBLIC_IP=$(curl -s ifconfig.me)
+  echo -e "\n\033[32mGnosis full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+  exit
+}
+
+installScroll() {
+    clear
+    # Step 1: Download genesis.json
+    echo "Creating /l2geth-datadir for persistent data storage..."
+    sudo mkdir -p /l2geth-datadir
+    echo "Running scroll container..."
+    sudo docker run -d --name scroll \
+        -p 8545:8545 scrolltech/l2geth:scroll-v3.1.2 --http  --http.addr "0.0.0.0" --bootnodes "enode://996a655365e731321ca35636f5a62fdf37c0b75dc56a8832c472d077da5af47effe45874196268f6083b8f65e1a9589ed25015f68f47598c7bcc93ac8ea29e8a@35.85.116.190:30303"
+    echo "Scroll container is now running."
+
+    # Step 7: In a separate shell, you can now attach to l2geth
+    sudo docker exec -it scroll geth attach
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mScroll full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+    exit
+}
+
+installMantle() {
+    clear
+    echo -e "\n\033[34mSetting up Mantle full node... \033[m"
+    sleep 1
+    refreshClient
+    git clone https://github.com/mantlenetworkio/networks $CLIENT_DIR
+    cd $CLIENT_DIR
+    echo -e "\n\033[34mStarting Mantle full node... \033[m"
+    docker-compose up -d
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mMantle full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+    exit
+}
 
 installTools() {
     clear
@@ -280,13 +450,6 @@ EOF
             docker-ce \
             docker-ce-cli \
             containerd.io
-    fi
-    if ! command go version >/dev/null; then
-        echo "Installing go language package version 1.20.2"
-        curl https://storage.googleapis.com/golang/go1.20.2.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf -
-        echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee -a /etc/environment > /dev/null
-        sudo chmod 0644 /etc/environment
-        source /etc/environment
     fi
     while read -r p ; do sudo apt install -y $p ; done < <(cat << "EOF"
         sysstat
@@ -319,6 +482,26 @@ refreshClient()
     if sudo docker ps -a | grep celo > /dev/null
 	then
 		sudo docker rm -f celo > /dev/null
+        rm -rf ./nohup.out > /dev/null
+		rm -f $LOGS_PATH > /dev/null
+	fi
+    if sudo docker ps -a | grep execution > /dev/null
+	then
+		sudo docker rm -f execution > /dev/null
+		sudo docker rm -f consensus > /dev/null
+        rm -rf ./nohup.out > /dev/null
+		rm -f $LOGS_PATH > /dev/null
+	fi
+    if sudo docker ps -a | grep scroll > /dev/null
+	then
+		sudo docker rm -f scroll > /dev/null
+        rm -rf ./nohup.out > /dev/null
+		rm -f $LOGS_PATH > /dev/null
+	fi
+    if sudo docker ps -a | grep client_dtl_1 > /dev/null
+	then
+		sudo docker rm -f client_verifier_1 > /dev/null
+		sudo docker rm -f client_dtl_1 > /dev/null
         rm -rf ./nohup.out > /dev/null
 		rm -f $LOGS_PATH > /dev/null
 	fi

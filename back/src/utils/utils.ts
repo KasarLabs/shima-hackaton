@@ -1,5 +1,6 @@
 import { Provider } from '../models/provider.model';
 import ping from 'ping';
+import axios from 'axios';
 
 const greatestCommonDivisor = (a: number, b: number): number => {
     if (b === 0) {
@@ -26,7 +27,7 @@ export const getNextProvider = (providers: Provider[]): Provider | null => {
       while (true) {
         currentIndex = (currentIndex + 1) % n;
         if (currentIndex === 0) {
-          currentWeight = currentWeight - 3;
+          currentWeight = currentWeight - 1;
           if (currentWeight < 0) {
             currentWeight = Math.max(...providers.map((provider) => provider.performance_score));
           }
@@ -42,16 +43,20 @@ export const rankRPCs = async (providers: Provider[]): Promise<{provider: Provid
 
     for (const provider of providers) {
         try {
-            const pingResult = await ping.promise.probe(provider.rpc_url.replace('https://', ''));
-            if (pingResult.alive && typeof pingResult.time == "number") {
-                results.push({ provider: provider, time: pingResult.time });
-            }
+            const startTime = new Date().getTime();
+            await axios.get(provider.rpc_url);
+            const endTime = new Date().getTime();
+            const responseTime = endTime - startTime;
+            results.push({ provider: provider, time: responseTime });
         } catch (error: any) {
             console.error(`Error pinging ${provider.rpc_url}: ${error.message}`);
         }
     }
-
     results.sort((a, b) => a.time - b.time);
+    console.log("                   ### RPC Leaderboard ###\n")
+    for (const result of results) {
+      console.log("[RPC] " + result.provider.rpc_url + " has a performance score of: " + Math.floor(1 / result.time * 10000) + "\n");
+    }
 
     return results;
 }

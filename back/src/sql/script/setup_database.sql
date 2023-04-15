@@ -20,9 +20,16 @@ CREATE TABLE IF NOT EXISTS schema_owner.users (
 -- Insert some sample providers
 INSERT INTO schema_owner.providers (rpc_url, chain_id, performance_score, computation_units)
 VALUES
-    ('https://eth.llamarpc.com', '1', 100, 0),
-    ('https://rpc.flashbots.net', '1',200, 0),
-    ('https://cloudflare-eth.com', '1',150, 0);
+    ('https://eth.llamarpc.com', '1', 0, 0),
+    ('https://ethereum.rpc.thirdweb.com/', '1', 0, 0),
+    ('https://rpc.flashbots.net', '1',0, 0),
+    ('https://cloudflare-eth.com', '1',0, 0),
+    ('https://polygon.llamarpc.com', '137', 0, 0),
+    ('https://rpc.testnet.mantle.xyz', '5001', 0, 0),
+    ('https://rpc.a2.taiko.xyz', '167004', 0, 0),
+    ('https://rpc.ankr.com/gnosis', '100', 0, 0),
+    ('https://rpc.ankr.com/celo', '42220', 0, 0),
+    ('https://celo.rpc.thirdweb.com/', '42220', 0, 0);
 
 -- Insert some sample users
 INSERT INTO schema_owner.users (wallet_address, key, computation_units)

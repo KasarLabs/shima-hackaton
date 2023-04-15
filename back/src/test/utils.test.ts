@@ -10,7 +10,8 @@ let providers: Provider[] = [
     { id: 3, rpc_url: 'https://cloudflare-eth.com', chain_id: '1', performance_score: 1, computation_units: 0 },
 ];
 
-describe('RPCs Ranking', () => {
+describe('RPCs Ranking', function() {
+    this.timeout(500000)
     it('should rank providers based on their ping', async () => {
         const results: { provider: Provider, time: number }[] = await rankRPCs(providers);
         for (let i = 0; i < results.length; i++) {
@@ -32,10 +33,6 @@ describe('getNextProvider', () => {
           selections[selectedProvider.id - 1]++;
         }
       }
-      console.log("Request to rpc with a performance score of " + providers[0].performance_score + ": " + selections[0]);
-      console.log("Request to rpc with a performance score of " + providers[1].performance_score + ": " + selections[1]);
-      console.log("Request to rpc with a performance score of " + providers[2].performance_score + ": " + selections[2]);
-      
       // Expect the providers with higher performance scores to be selected more often
       expect(selections[0]).to.be.greaterThan(selections[1]);
       expect(selections[1]).to.be.greaterThan(selections[2]);

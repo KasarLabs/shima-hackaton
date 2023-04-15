@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import type { Node } from "../interfaces/";
+import React from "react";
+import type { Provider } from "../interfaces/";
 interface DeleteRpcModalProps {
   isOpen: boolean;
   onClose: () => void;
-  node: Node;
+  node: Provider;
 }
 
 const DeleteRpcModal: React.FC<DeleteRpcModalProps> = ({
@@ -27,7 +27,7 @@ const DeleteRpcModal: React.FC<DeleteRpcModalProps> = ({
       <div className="w-full max-w-md p-6 space-y-4 bg-white rounded-lg text-black">
         <h1 className="text-xl font-bold text-gray-800 border-b pb-2">{`Delete node ${node.id}`}</h1>
         <h2 className="text-l font-semibold">
-          {`Do you really want to delete the RPC for ${node.network} ?`}
+          {`Do you really want to delete the RPC for chainId ${node.chain_id} ?`}
         </h2>
         <div className="flex flex-row">
           <button

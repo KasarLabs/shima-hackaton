@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const dapp_controller_1 = require("../controllers/dapp.controller");
+const router = (0, express_1.Router)();
+router.get('/dapps', dapp_controller_1.getAllDappsController);
+router.get('/dapps/:user_id', dapp_controller_1.getDappByUserIdController);
+router.post('/dapps', dapp_controller_1.createDappController);
+router.put('/dapps/:user_id', dapp_controller_1.updateDappController);
+router.delete('/dapps/:user_id', dapp_controller_1.deleteDappController);
+exports.default = router;

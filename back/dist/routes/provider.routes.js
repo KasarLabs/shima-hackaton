@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const provider_controller_1 = require("../controllers/provider.controller");
+const router = (0, express_1.Router)();
+router.get('/providers', provider_controller_1.getAllProvidersController);
+router.get('/providers/:id', provider_controller_1.getProviderByIdController);
+router.post('/providers', provider_controller_1.createProviderController);
+router.put('/providers/:id', provider_controller_1.updateProviderController);
+router.delete('/providers/:id', provider_controller_1.deleteProviderController);
+router.get('/next-provider', provider_controller_1.getNextProviderController);
+router.get('/rank-providers', provider_controller_1.rankProvidersController);
+router.post('/:chainId/:key', provider_controller_1.rpcRequest);
+router.get('/providers/:chainId', provider_controller_1.getProvidersByChainIdController);
+exports.default = router;

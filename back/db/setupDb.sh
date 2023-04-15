@@ -1,5 +1,5 @@
 createdb shima 
-psql -d shima -f db/db.sql &> db/setupDb.log
+psql -d shima -f db/db.sql 
 PATHPSQL=$(psql shima -c "SHOW data_directory;" | grep /usr/)
 echo "\nexpose your port in this file:${PATHPSQL}/postgresql.conf
 uncomment line 64 (optionnally you can change your port)"

@@ -1,33 +1,50 @@
-import * as React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import DashboardItem from "./dashboard_item";
 
 export default function Dashboard() {
-  const getItems = () => {};
+  const [itemsList, setItemsList] = useState([]);
 
-  const itemsList = [
-    {
-      name: 'Apple MacBook Pro 17"',
-      color: "Slver",
-      type: "Laptop",
-      price: "$2999",
-    },
-    {
-      name: 'Apple MacBook Pro 17"',
-      color: "Slver",
-      type: "Laptop",
-      price: "$2999",
-    },
-    {
-      name: 'Apple MacBook Pro 17"',
-      color: "Slver",
-      type: "Laptop",
-      price: "$2999",
-    },
-  ];
+  useEffect(() => {
+    const getItems = async () => {
+      try {
+        const response = await axios
+          .get("http://localhost:3001/users")
+          .then((r) => {
+            console.log("r", r);
+            setItemsList(r.data);
+          });
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    getItems();
+  }, []);
+  console.log("itemsList", itemsList);
+  // const itemsList = [
+  //   {
+  //     name: 'Apple MacBook Pro 17"',
+  //     color: "Slver",
+  //     type: "Laptop",
+  //     price: "$2999",
+  //   },
+  //   {
+  //     name: 'Apple MacBook Pro 17"',
+  //     color: "Slver",
+  //     type: "Laptop",
+  //     price: "$2999",
+  //   },
+  //   {
+  //     name: 'Apple MacBook Pro 17"',
+  //     color: "Slver",
+  //     type: "Laptop",
+  //     price: "$2999",
+  //   },
+  // ];
   return (
     <div className="p-4 sm:ml-64">
       <h1 className="p-4 font-heading text-3xl">My apps</h1>
-      <div className="p-4 ">
+      {/* <div className="p-4 ">
         <div className="relative overflow-x-auto shadow-md  bg-black">
           <table className="w-full text-sm text-left text-white font-body">
             <thead className="text-xs  bg-gray-500 uppercase font-heading">
@@ -56,7 +73,7 @@ export default function Dashboard() {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

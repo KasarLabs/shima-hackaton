@@ -8,7 +8,7 @@ async function main() {
     const credit = await attach("CreditContract", process.env.CREDITCONTRACT);
     const stable = await attach("StableCoin", process.env.STABLE);
     const coef = await credit.COEFFICIENT();
-    const amount = ethers.utils.parseUnits("500", 6).mul(coef) // in Credit
+    const amount = ethers.utils.parseUnits("500", 6) // in USDC
     const balanceBefore = await stable.balanceOf(user.address);
     const creditsBefore = await credit.credits(user.address);
     await credit.withdraw(user.address, amount);

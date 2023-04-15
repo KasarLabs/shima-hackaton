@@ -203,6 +203,11 @@ installGeth() {
     echo "{\"name\": \"${node_name}\", \"client\": \"${client}\", \"rpc_key\": \"${rpc_key}\"}" > config.json
     go build
     echo -e "\n\033[32m$name full node is running correctly using Geth client!\033[m"
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mTaiko full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
     exit
 }
 
@@ -256,7 +261,7 @@ installCelo() {
 
     echo "Celo account address: $CELO_ACCOUNT_ADDRESS"
     # Start the Celo full node
-    sudo docker run --name celo -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode full --http --http.addr 0.0.0.0 --http.api eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --etherbase $CELO_ACCOUNT_ADDRESS --datadir /root/.celo
+    sudo docker run --name celo -d --restart unless-stopped --stop-timeout 300 -p 0.0.0.0:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode full --http --http.addr 0.0.0.0 --http.api eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --etherbase $CELO_ACCOUNT_ADDRESS --datadir /root/.celo
 
     clear
     echo -e "\n\033[34mWaiting for Celo full node to start... \033[m"

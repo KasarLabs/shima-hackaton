@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-export default function ProviderSidebar() {
+type ProviderSidebarProps = {
+  onOpenModal: () => void;
+};
+
+export default function ProviderSidebar({ onOpenModal }: ProviderSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <aside
       id="logo-sidebar"
@@ -22,9 +27,9 @@ export default function ProviderSidebar() {
         </Link>
         <ul className="space-y-2 font-medium font-body text-white">
           <li>
-            <Link
-              href="/dashboard/create-project"
-              className="flex items-center p-2  rounded-lg  hover:bg-gray-100"
+            <div
+              className="flex items-center p-2 rounded-lg hover:bg-gray-100"
+              onClick={onOpenModal}
             >
               <svg
                 viewBox="0 0 1024 1024"
@@ -39,7 +44,7 @@ export default function ProviderSidebar() {
               <span className="flex-1 ml-3 whitespace-nowrap">
                 Add a new RPC
               </span>
-            </Link>
+            </div>
           </li>
 
           <li>

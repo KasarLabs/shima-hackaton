@@ -1,15 +1,7 @@
 import React, { useState } from "react";
+import { chains } from "../utils/utils";
 
 export default function Create() {
-  const chains: string[] = [
-    "polygon",
-    "taiko",
-    "celo",
-    "gnosis",
-    "filecoin",
-    "mantle",
-  ];
-
   const [selected, setSelected] = useState<string>("");
   const [projectName, setProjectName] = useState<string>("");
 
@@ -21,7 +13,6 @@ export default function Create() {
     }
   };
 
-  console.log("projectName", projectName);
   return (
     <div className="p-4 sm:ml-64">
       <h1 className="p-4 font-heading text-3xl">Create a project</h1>

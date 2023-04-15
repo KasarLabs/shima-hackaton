@@ -8,6 +8,8 @@ module.exports = {
     "./public/**/*.html",
     "./components/**/*.{ts,tsx}",
     "./pages/**/*.{ts,tsx}",
+    "./styles/**/*.{ts,tsx}",
+    "./utils/**/*.{ts,tsx}"
   ],
   plugins: [require("flowbite/plugin")],
   theme: {

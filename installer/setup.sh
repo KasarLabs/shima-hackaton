@@ -207,7 +207,7 @@ installTaiko() {
     sudo ufw enable
     sudo ufw allow 8545
     PUBLIC_IP=$(curl -s ifconfig.me)
-    echo -e "\n\033[32mCelo full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+    echo -e "\n\033[32mTaiko full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
 }
 
 installCelo() {

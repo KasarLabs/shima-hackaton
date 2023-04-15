@@ -28,7 +28,7 @@ describe('Load balancing test', function () {
         let providers = await getAllProviders();
         let rankedProviders = await rankRPCs(providers);
         for (let provider of rankedProviders) {
-            provider.provider.performance_score = Math.floor(1 / provider.time * 1000);
+            provider.provider.performance_score = Math.floor(1 / provider.time * 10000);
             await updateProvider(provider.provider.id, provider.provider);
         }
 

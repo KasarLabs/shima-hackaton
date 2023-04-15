@@ -71,24 +71,25 @@ const ProviderDashboard = ({ nodes }: ProviderDashboardProps) => {
           </div>
 
           <div className="grid grid-cols-3 gap-4 text-white">
-            {nodes.map((node) => (
-              <div>
-                <NodeItem
-                  key={node.id}
-                  node={node}
-                  isShaking={isShaking}
-                  isMinusVisible={isMinusVisible}
-                  onNodeItemClick={() => handleNodeItemClick(node)}
-                />
-                {selectedNode && selectedNode.id === node.id && (
-                  <DeleteRpcModal
-                    isOpen={isDeleteModalOpen}
-                    onClose={handleCloseDeleteModal}
-                    node={selectedNode}
+            {nodes &&
+              nodes.map((node) => (
+                <div>
+                  <NodeItem
+                    key={node.id}
+                    node={node}
+                    isShaking={isShaking}
+                    isMinusVisible={isMinusVisible}
+                    onNodeItemClick={() => handleNodeItemClick(node)}
                   />
-                )}
-              </div>
-            ))}
+                  {selectedNode && selectedNode.id === node.id && (
+                    <DeleteRpcModal
+                      isOpen={isDeleteModalOpen}
+                      onClose={handleCloseDeleteModal}
+                      node={selectedNode}
+                    />
+                  )}
+                </div>
+              ))}
           </div>
         </div>
         <div className="border-t mt-12">

@@ -371,6 +371,12 @@ EOL
   # Change to the gnosis directory and start the docker-compose
   cd /home/$USER/gnosis
   docker-compose up -d
+  echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+  sudo ufw enable
+  sudo ufw allow 8545
+  PUBLIC_IP=$(curl -s ifconfig.me)
+  echo -e "\n\033[32mGnosis full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+  exit
 }
 
 installScroll() {
@@ -380,12 +386,17 @@ installScroll() {
     sudo mkdir -p /l2geth-datadir
     echo "Running scroll container..."
     sudo docker run -d --name scroll \
-        -p 8545:8545 scrolltech/l2geth:scroll-v3.1.2 --http  --http.addr "0.0.0.0"
-
+        -p 8545:8545 scrolltech/l2geth:scroll-v3.1.2 --http  --http.addr "0.0.0.0" --bootnodes "enode://996a655365e731321ca35636f5a62fdf37c0b75dc56a8832c472d077da5af47effe45874196268f6083b8f65e1a9589ed25015f68f47598c7bcc93ac8ea29e8a@35.85.116.190:30303"
     echo "Scroll container is now running."
 
     # Step 7: In a separate shell, you can now attach to l2geth
     sudo docker exec -it scroll geth attach
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mScroll full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+    exit
 }
 
 installMantle() {
@@ -397,6 +408,12 @@ installMantle() {
     cd $CLIENT_DIR
     echo -e "\n\033[34mStarting Mantle full node... \033[m"
     docker-compose up -d
+    echo -e "\n\033[34mExposing RPC endpoint...\033[m"
+    sudo ufw enable
+    sudo ufw allow 8545
+    PUBLIC_IP=$(curl -s ifconfig.me)
+    echo -e "\n\033[32mMantle full node RPC is exposed correctly at: http://$PUBLIC_IP:8545\033[m"
+    exit
 }
 
 installTools() {

@@ -21,7 +21,7 @@ describe('RPC Forwarding', () => {
             params: [],
         };
         const response = await request
-            .post(`/blockchain/${newUser.key}`)
+            .post(`/1/${newUser.key}`)
             .send(rpcRequestBody);
 
         expect(response.status).to.equal(200);

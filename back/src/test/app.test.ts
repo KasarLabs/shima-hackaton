@@ -37,7 +37,7 @@ describe('Load balancing test', function () {
             let res = await supertest(app).post('/users').send(user);
             for (let i = 0; i < 3; i++) {
                 const response = await supertest(app)
-                    .post(`/blockchain/${user.key}`)
+                    .post(`/1/${user.key}`)
                     .send(rpcRequestBody);
             }
             await supertest(app).delete(`/users/${res.body.id}`);

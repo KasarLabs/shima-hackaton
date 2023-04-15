@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllProvidersController, getProviderByIdController, createProviderController, updateProviderController, deleteProviderController, getNextProviderController, rankProvidersController, rpcRequest } from '../controllers/provider.controller';
+import { getAllProvidersController, getProviderByIdController, createProviderController, updateProviderController, deleteProviderController, getNextProviderController, rankProvidersController, rpcRequest, getProvidersByChainIdController } from '../controllers/provider.controller';
 
 const router = Router();
 
@@ -10,6 +10,7 @@ router.put('/providers/:id', updateProviderController);
 router.delete('/providers/:id', deleteProviderController);
 router.get('/next-provider', getNextProviderController);
 router.get('/rank-providers', rankProvidersController);
-router.post('/blockchain/:key', rpcRequest)
+router.post('/:chainId/:key', rpcRequest)
+router.get('/providers/:chainId', getProvidersByChainIdController);
 export default router;
 

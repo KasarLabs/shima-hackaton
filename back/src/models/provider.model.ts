@@ -3,6 +3,7 @@ import { query } from '../config/dbConfig';
 export interface Provider {
     id: number;
     rpc_url: string;
+    chainId: string;
     performance_score: number;
     computation_units: number;
 }
@@ -87,4 +88,18 @@ export const deleteProvider = (id: number): Promise<void> => {
         });
     });
 };
+
+// Function to get providers by chainId
+export const getProvidersByChainId = (chainId: string): Promise<Provider[]> => {
+    return new Promise((resolve, reject) => {
+      query('SELECT * FROM schema_owner.providers WHERE chain_id = $1', [chainId], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.rows);
+        }
+      });
+    });
+  };
+  
 

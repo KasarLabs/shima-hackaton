@@ -46,6 +46,7 @@ describe('Provider routes', function () {
     it('should POST a new provider then DELETE it', async () => {
         const newProvider = {
           rpc_url: 'https://testprovider.testing.com',
+          chain_id: '1',
           performance_score: 5,
           computation_units: 0,
         };

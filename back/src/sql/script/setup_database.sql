@@ -4,6 +4,7 @@ CREATE SCHEMA IF NOT EXISTS schema_owner;
 CREATE TABLE IF NOT EXISTS schema_owner.providers (
     id SERIAL PRIMARY KEY,
     rpc_url VARCHAR(255) UNIQUE NOT NULL,
+    chain_id VARCHAR(255) NOT NULL,
     performance_score INT NOT NULL,
     computation_units INT NOT NULL
 );
@@ -17,11 +18,11 @@ CREATE TABLE IF NOT EXISTS schema_owner.users (
 );
 
 -- Insert some sample providers
-INSERT INTO schema_owner.providers (rpc_url, performance_score, computation_units)
+INSERT INTO schema_owner.providers (rpc_url, chain_id, performance_score, computation_units)
 VALUES
-    ('https://eth.llamarpc.com', 100, 0),
-    ('https://rpc.flashbots.net', 200, 0),
-    ('https://cloudflare-eth.com', 150, 0);
+    ('https://eth.llamarpc.com', '1', 100, 0),
+    ('https://rpc.flashbots.net', '1',200, 0),
+    ('https://cloudflare-eth.com', '1',150, 0);
 
 -- Insert some sample users
 INSERT INTO schema_owner.users (wallet_address, key, computation_units)

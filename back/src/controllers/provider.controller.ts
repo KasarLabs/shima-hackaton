@@ -108,7 +108,6 @@ export const rpcRequest = async (req: Request, res: Response) => {
 
         // Get the list of providers from the database or cache
         const providers = await getProvidersByChainId(chainId);
-
         // Get the next provider using the weighted round-robin algorithm
         const provider = getNextProvider(providers);
 

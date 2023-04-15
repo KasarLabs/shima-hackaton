@@ -10,7 +10,8 @@ let providers: Provider[] = [
     { id: 3, rpc_url: 'https://cloudflare-eth.com', chain_id: '1', performance_score: 1, computation_units: 0 },
 ];
 
-describe('RPCs Ranking', () => {
+describe('RPCs Ranking', function() {
+    this.timeout(500000)
     it('should rank providers based on their ping', async () => {
         const results: { provider: Provider, time: number }[] = await rankRPCs(providers);
         for (let i = 0; i < results.length; i++) {

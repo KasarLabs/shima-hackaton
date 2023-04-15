@@ -32,10 +32,6 @@ describe('getNextProvider', () => {
           selections[selectedProvider.id - 1]++;
         }
       }
-      console.log("Request to rpc with a performance score of " + providers[0].performance_score + ": " + selections[0]);
-      console.log("Request to rpc with a performance score of " + providers[1].performance_score + ": " + selections[1]);
-      console.log("Request to rpc with a performance score of " + providers[2].performance_score + ": " + selections[2]);
-      
       // Expect the providers with higher performance scores to be selected more often
       expect(selections[0]).to.be.greaterThan(selections[1]);
       expect(selections[1]).to.be.greaterThan(selections[2]);

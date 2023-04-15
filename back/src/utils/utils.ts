@@ -26,7 +26,7 @@ export const getNextProvider = (providers: Provider[]): Provider | null => {
       while (true) {
         currentIndex = (currentIndex + 1) % n;
         if (currentIndex === 0) {
-          currentWeight = currentWeight - 3;
+          currentWeight = currentWeight - 1;
           if (currentWeight < 0) {
             currentWeight = Math.max(...providers.map((provider) => provider.performance_score));
           }
@@ -52,6 +52,10 @@ export const rankRPCs = async (providers: Provider[]): Promise<{provider: Provid
     }
 
     results.sort((a, b) => a.time - b.time);
+    console.log("                   ### RPC Leaderboard ###\n")
+    for (const result of results) {
+      console.log("[RPC] " + result.provider.rpc_url + " has a performance score of: " + Math.floor(1 / result.time * 1000) + "\n");
+    }
 
     return results;
 }

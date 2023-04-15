@@ -94,7 +94,7 @@ export default function ProviderSidebar({
                       <div className="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 hover:text-black">
                         <div className="flex flex-row align-center ">
                           <p className="mr-2">{node.id}</p>
-                          <p>{node.network}</p>
+                          <p className=""> Network name</p>
                         </div>
                       </div>
 

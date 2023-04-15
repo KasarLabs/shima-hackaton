@@ -4,6 +4,7 @@ import { chains } from "../utils/utils";
 export default function Create() {
   const [selected, setSelected] = useState<string>("");
   const [projectName, setProjectName] = useState<string>("");
+  const [paymentPlan, setPaymentPlan] = useState<boolean>(false);
 
   const handleSelected = (item: string) => {
     if (!selected || selected != item) {
@@ -12,12 +13,12 @@ export default function Create() {
       setSelected("");
     }
   };
-
+  console.log(paymentPlan);
   return (
     <div className="p-4 sm:ml-64">
       <h1 className="p-4 font-heading text-3xl">Create a project</h1>
       <div className="p-4 rounded-lg dark:border-gray-700">
-        <div className="ml-4 p-4">
+        <div className="ml-4 px-4">
           <h2 className="font-heading text-lg">Please Select a Network</h2>
         </div>
         <div className="grid grid-cols-3 gap-4 mb-4 p-4 ml-4">
@@ -41,13 +42,13 @@ export default function Create() {
           ))}
         </div>
       </div>
-      <div className="p-4 rounded-lg dark:border-gray-700">
-        <div className="ml-4 p-4">
+      <div className="px-4 rounded-lg dark:border-gray-700">
+        <div className="ml-4 px-4">
           <h2 className="font-heading text-lg">
             Please enter a name for your project
           </h2>
 
-          <div className="relative mt-4">
+          <div className="relative mt-2">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
                 viewBox="0 0 24 24"
@@ -70,7 +71,39 @@ export default function Create() {
           </div>
         </div>
       </div>
-
+      <div className="px-4 rounded-lg dark:border-gray-700">
+        <div className="ml-4 px-4 py-4">
+          <h2 className="font-heading text-lg">Select a Payment Plan</h2>
+        </div>
+        <div className="ml-4 px-4">
+          <div className="flex items-center ">
+            <input
+              type="radio"
+              id="free"
+              name="paymentPlan"
+              value="free"
+              className="text-red-800 focus:ring-red-800"
+              onChange={() => setPaymentPlan(false)}
+            />
+            <label htmlFor="free" className="ml-2">
+              Free Tier
+            </label>
+          </div>
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="nonFree"
+              name="paymentPlan"
+              value="nonFree"
+              className="text-red-800 focus:ring-red-800"
+              onChange={() => setPaymentPlan(true)}
+            />
+            <label htmlFor="nonFree" className="ml-2">
+              Premium Tier
+            </label>
+          </div>
+        </div>
+      </div>
       <div className="p-4 mr-4 mt-4 flex flex-row justify-end items-center">
         <svg fill="currentColor" viewBox="0 0 16 16" height="3em" width="3em">
           <path
